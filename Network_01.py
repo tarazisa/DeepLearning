@@ -1,19 +1,16 @@
 import numpy as np
 from sklearn.metrics import mean_squared_error
+import matplotlib.pyplot as plt
 
-model_output_0 = []
+model_output = []
 model_output_1 = []
 
-target_outputs = np.array([[12],[12]])
+target_outputs = np.array([[12], [12]])
 input_data = np.array([[0, 3], [0, 3]])
 
-weights_1 = {'node_0': [2, 1],
-             'node_1': [1, 2],
-             'output': [1, 1]}
-
-weights_0 = {'node_0': [2, 1],
-             'node_1': [1, 3],
-             'output': [1, 2]}
+weights = {'node_0': [2, 1],
+          'node_1': [1, 3],
+          'output': [1, 2]}
 
 
 def predict_with_network(input_data_row, weights):
@@ -32,14 +29,35 @@ def predict_with_network(input_data_row, weights):
 def relu(value):
     return max(value, 0)
 
-for row in input_data:
-    model_output_0.append(predict_with_network(row, weights_0))
-    model_output_1.append(predict_with_network(row, weights_1))
 
-mse_0 = mean_squared_error(target_outputs, model_output_0)
-mse_1 = mean_squared_error(target_outputs, model_output_1)
+def get_slope(input_data, preds, target):
+    # Calculate the gradient slope
+    error = preds - target
+    slope = 2 * input_data * error
+    return slope
 
-print(model_output_0)
-print(mse_0)
-print(model_output_1)
-print(mse_1)
+
+def update_weights(weights, slope, learning_rate):
+    updated_weights = weights - slope*learning_rate
+    return updated_weights
+
+
+n_updates = 20
+mse_hist = []
+
+#for row in input_data:
+
+row = input_data[0]
+for i in range(n_updates):
+    prediction = predict_with_network(row, weights)
+    slope = get_slope(row, prediction)
+    weights = update_weights(weights, slope, 0.01)
+    model_output.append(prediction)
+    mse = mean_squared_error(target_outputs, model_output)
+    mse_hist.append(mse)
+
+plt.plot(mse_hist)
+plt.xlabel('Iterations')
+plt.ylabel('Mean Squared Error')
+plt.show()
+print(weights)
