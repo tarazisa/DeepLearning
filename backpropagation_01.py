@@ -51,14 +51,6 @@ def init_weights():
         weights[str(layer_num)+"->"+str(layer_num+1)] = wl
 
 
-def predict_with_network(input_layer_values, weights):
-    node_value = []
-    # process the values for the first hidden layer
-    for j in range(hidden_layers.shape):
-        node_value.append((input_layer_values * weights['i'][j]).sum())
-    print(node_value)
-    return node_value
-
 # predict_with_network(input_layer, weights)
 init_layers_values()
 init_weights()
