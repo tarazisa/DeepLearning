@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 input_values = np.array([0, 3])
 layers = np.array([2, 3, 3, 2])
 layers_values = {}
+target_values = np.array([])
 weights = {}
 
 def init_layers_values():
@@ -40,6 +41,13 @@ def relu(value):
     return max(0., value)
 
 
+def get_slope(input_data, preds, target):
+    # Calculate the gradient slope
+    error = preds - target
+    slope = 2 * input_data * error
+    return slope
+
+
 def forward_propagate():
     for layer_num in range(layers.size - 1):
         output_values = []
@@ -55,6 +63,15 @@ def forward_propagate():
         print(output_values)
         print(layers_values)
 
+
+def back_propagate():
+    layer_num = layers.size
+    while layer_num >= 0:
+        in_values = np.array(layers_values[str(layer_num - 1)])
+        layer_values = np.array(layers_values[str(layer_num )])
+        w = weights[str(layer_num - 1) + "->" + str(layer_num)]
+        for node in in_values:
+            get_slope(node, layer_values, target_values)
 
 # predict_with_network(input_layer, weights)
 init_layers_values()
